@@ -7,6 +7,7 @@ import {
   DrawerItem,
 } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { View, Text, Linking } from "react-native";
 import { Icon, Image } from "react-native-elements";
 
@@ -17,8 +18,12 @@ import Dishdetail from "./DishdetailComponent";
 import Contact from "./ContactComponent";
 import Reservation from "./ReservationComponent";
 import Favorites from "./FavoriteComponent";
+import Login from "./LoginComponent";
+import Register from "./RegisterComponent";
+import Logout from "./LogoutComponent";
+import QR from "./QRComponent";
+import TravelPoint from "./TravelPoint";
 
-import { baseUrl } from "../shared/baseUrl";
 // redux
 import { connect } from "react-redux";
 import {
@@ -34,6 +39,146 @@ const mapDispatchToProps = (dispatch) => ({
   fetchComments: () => dispatch(fetchComments()),
   fetchPromos: () => dispatch(fetchPromos()),
 });
+
+const mapStateToProps = (state) => ({
+  login: state.login,
+});
+
+const TabNavigator = createBottomTabNavigator();
+function TabNavigatorScreen() {
+  return (
+    <TabNavigator.Navigator
+      initialRouteName="Login"
+      tabBarOptions={{
+        activeBackgroundColor: "#000000",
+        inactiveBackgroundColor: "#fff",
+        activeTintColor: "#fff",
+        inactiveTintColor: "gray",
+      }}
+    >
+      <TabNavigator.Screen
+        name="Login"
+        component={Login}
+        options={{
+          tabBarLabel: "Login",
+          tabBarIcon: ({ color, size }) => (
+            <Icon
+              name="sign-in"
+              type="font-awesome"
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <TabNavigator.Screen
+        name="Register"
+        component={Register}
+        options={{
+          tabBarLabel: "Register",
+          tabBarIcon: ({ color, size }) => (
+            <Icon
+              name="user-plus"
+              type="font-awesome"
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+    </TabNavigator.Navigator>
+  );
+}
+
+const QRNavigator = createStackNavigator();
+function QRNavigatorScreen() {
+  return (
+    <QRNavigator.Navigator
+      initialRouteName="QR"
+      screenOptions={{
+        headerStyle: { backgroundColor: "#000000" },
+        headerTintColor: "#fff",
+        headerTitleStyle: { color: "#fff" },
+      }}
+    >
+      <QRNavigator.Screen
+        name="QR"
+        component={QR}
+        options={({ navigation }) => ({
+          headerTitle: "QR",
+          headerLeft: () => (
+            <Icon
+              name="menu"
+              size={36}
+              color="#fff"
+              onPress={() => navigation.toggleDrawer()}
+            />
+          ),
+        })}
+      />
+    </QRNavigator.Navigator>
+  );
+}
+
+const LoginNavigator = createStackNavigator();
+function LoginNavigatorScreen() {
+  return (
+    <LoginNavigator.Navigator
+      initialRouteName="LoginRegister"
+      screenOptions={{
+        headerStyle: { backgroundColor: "#000000" },
+        headerTintColor: "#fff",
+        headerTitleStyle: { color: "#fff" },
+      }}
+    >
+      <LoginNavigator.Screen
+        name="LoginRegister"
+        component={TabNavigatorScreen}
+        options={({ navigation }) => ({
+          headerTitle: "Login | Register",
+          headerLeft: () => (
+            <Icon
+              name="menu"
+              size={36}
+              color="#fff"
+              onPress={() => navigation.toggleDrawer()}
+            />
+          ),
+        })}
+      />
+    </LoginNavigator.Navigator>
+  );
+}
+
+const LogoutNavigator = createStackNavigator();
+function LogoutNavigatorScreen() {
+  return (
+    <LogoutNavigator.Navigator
+      initialRouteName="LogOut"
+      screenOptions={{
+        headerStyle: { backgroundColor: "#000000" },
+        headerTintColor: "#fff",
+        headerTitleStyle: { color: "#fff" },
+      }}
+    >
+      <LogoutNavigator.Screen
+        name="LogOut"
+        component={Logout}
+        options={({ navigation }) => ({
+          headerTitle: "Are you sure?",
+          headerLeft: () => (
+            <Icon
+              name="menu"
+              size={36}
+              color="#fff"
+              onPress={() => navigation.toggleDrawer()}
+            />
+          ),
+        })}
+      />
+    </LogoutNavigator.Navigator>
+  );
+}
 
 const HomeNavigator = createStackNavigator();
 function HomeNavigatorScreen() {
@@ -191,94 +336,6 @@ function ReservationNavigatorScreen() {
 }
 
 const MainNavigator = createDrawerNavigator();
-function MainNavigatorScreen() {
-  return (
-    <MainNavigator.Navigator
-      initialRouteName="Home"
-      drawerContent={(props) => <CustomDrawerContent {...props} />}
-    >
-      <MainNavigator.Screen
-        name="Home"
-        component={HomeNavigatorScreen}
-        options={{
-          headerShown: false,
-          drawerIcon: ({ focused, size }) => (
-            <Icon name="home" size={size} color={focused ? "#7cc" : "#ccc"} />
-          ),
-        }}
-      />
-      <MainNavigator.Screen
-        name="About"
-        component={AboutNavigatorScreen}
-        options={{
-          headerShown: false,
-          title: "About Us",
-          drawerIcon: ({ focused, size }) => (
-            <Icon name="info" size={size} color={focused ? "#7cc" : "#ccc"} />
-          ),
-        }}
-      />
-      <MainNavigator.Screen
-        name="Menu"
-        component={MenuNavigatorScreen}
-        options={{
-          headerShown: false,
-          drawerIcon: ({ focused, size }) => (
-            <Icon name="menu" size={size} color={focused ? "#7cc" : "#ccc"} />
-          ),
-        }}
-      />
-      <MainNavigator.Screen
-        name="Contact"
-        component={ContactNavigatorScreen}
-        options={{
-          headerShown: false,
-          title: "Contact Us",
-          drawerIcon: ({ focused, size }) => (
-            <Icon
-              name="contacts"
-              size={size}
-              color={focused ? "#7cc" : "#ccc"}
-            />
-          ),
-        }}
-      />
-      <MainNavigator.Screen
-        name="Reservation"
-        component={ReservationNavigatorScreen}
-        options={{
-          headerShown: false,
-          title: "Reserve Table",
-          drawerIcon: ({ focused, size }) => (
-            <Icon
-              name="cutlery"
-              type="font-awesome"
-              size={size}
-              color={focused ? "#7cc" : "#ccc"}
-            />
-          ),
-        }}
-      />
-      <MainNavigator.Screen
-        name="Favorites"
-        component={FavoritesNavigatorScreen}
-        options={{
-          headerShown: false,
-          title: "My Favorites",
-          drawerIcon: ({ focused, size }) => (
-            <Icon
-              name="heart"
-              type="font-awesome"
-              size={size}
-              color={focused ? "#7cc" : "#ccc"}
-            />
-          ),
-        }}
-      />
-    </MainNavigator.Navigator>
-  );
-}
-
 function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
@@ -324,6 +381,161 @@ function CustomDrawerContent(props) {
   );
 }
 
+class MainNavigatorScreen extends Component {
+  render() {
+    return (
+      <MainNavigator.Navigator
+        initialRouteName="Home"
+        drawerContent={(props) => <CustomDrawerContent {...props} />}
+      >
+        <MainNavigator.Screen
+          name="Home"
+          component={HomeNavigatorScreen}
+          options={{
+            headerShown: false,
+            drawerIcon: ({ focused, size }) => (
+              <Icon name="home" size={size} color={focused ? "#7cc" : "#ccc"} />
+            ),
+          }}
+        />
+        <MainNavigator.Screen
+          name="About"
+          component={AboutNavigatorScreen}
+          options={{
+            headerShown: false,
+            title: "About Us",
+            drawerIcon: ({ focused, size }) => (
+              <Icon name="info" size={size} color={focused ? "#7cc" : "#ccc"} />
+            ),
+          }}
+        />
+        <MainNavigator.Screen
+          name="Menu"
+          component={MenuNavigatorScreen}
+          options={{
+            headerShown: false,
+            drawerIcon: ({ focused, size }) => (
+              <Icon name="menu" size={size} color={focused ? "#7cc" : "#ccc"} />
+            ),
+          }}
+        />
+        <MainNavigator.Screen
+          name="Contact"
+          component={ContactNavigatorScreen}
+          options={{
+            headerShown: false,
+            title: "Contact Us",
+            drawerIcon: ({ focused, size }) => (
+              <Icon
+                name="contacts"
+                size={size}
+                color={focused ? "#7cc" : "#ccc"}
+              />
+            ),
+          }}
+        />
+        <MainNavigator.Screen
+          name="Favorites"
+          component={FavoritesNavigatorScreen}
+          options={{
+            headerShown: false,
+            title: "My Favorites",
+            drawerIcon: ({ focused, size }) => (
+              <Icon
+                name="heart"
+                type="font-awesome"
+                size={size}
+                color={focused ? "#7cc" : "#ccc"}
+              />
+            ),
+          }}
+        />
+        <MainNavigator.Screen
+          name="Reservation"
+          component={ReservationNavigatorScreen}
+          options={{
+            headerShown: false,
+            title: "Reserve Table",
+            drawerIcon: ({ focused, size }) => (
+              <Icon
+                name="cutlery"
+                type="font-awesome"
+                size={size}
+                color={focused ? "#7cc" : "#ccc"}
+              />
+            ),
+          }}
+        />
+        {this.props.login.isLoggedIn ? (
+          <>
+            <MainNavigator.Screen
+              name={` ${this.props.login.userId}'s Shopping Cart`}
+              component={FavoritesNavigatorScreen}
+              options={{
+                headerShown: false,
+                drawerIcon: ({ focused, size }) => (
+                  <Icon
+                    name="user-circle-o"
+                    type="font-awesome"
+                    size={size}
+                    color={focused ? "#000000" : "#ccc"}
+                  />
+                ),
+              }}
+            />
+            <MainNavigator.Screen
+              name="Loyalty Card"
+              component={QRNavigatorScreen}
+              options={{
+                headerShown: false,
+                drawerIcon: ({ focused, size }) => (
+                  <Icon
+                    name="qrcode"
+                    type="font-awesome"
+                    size={size}
+                    color={focused ? "#000000" : "#ccc"}
+                  />
+                ),
+              }}
+            />
+            <MainNavigator.Screen
+              name="LogOut"
+              component={LogoutNavigatorScreen}
+              options={{
+                headerShown: false,
+                drawerIcon: ({ focused, size }) => (
+                  <Icon
+                    name="sign-out"
+                    type="font-awesome"
+                    size={size}
+                    color={focused ? "#000000" : "#ccc"}
+                  />
+                ),
+              }}
+            />
+          </>
+        ) : (
+          <MainNavigator.Screen
+            name="Login"
+            component={LoginNavigatorScreen}
+            options={{
+              headerShown: false,
+              drawerIcon: ({ focused, size }) => (
+                <Icon
+                  name="sign-in"
+                  type="font-awesome"
+                  size={size}
+                  color={focused ? "#000000" : "#ccc"}
+                />
+              ),
+            }}
+          />
+        )}
+      </MainNavigator.Navigator>
+    );
+  }
+}
+
 function FavoritesNavigatorScreen() {
   const FavoritesNavigator = createStackNavigator();
   return (
@@ -365,7 +577,14 @@ class Main extends Component {
   render() {
     return (
       <NavigationContainer>
-        <MainNavigatorScreen />
+        <MainNavigatorScreen login={this.props.login} />
+        {this.props.login.isLoggedIn ? (
+          <TravelPoint />
+        )
+          :
+          <>
+          </>
+        }
       </NavigationContainer>
     );
   }
@@ -378,4 +597,4 @@ class Main extends Component {
     this.props.fetchPromos();
   }
 }
-export default connect(null, mapDispatchToProps)(Main);
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

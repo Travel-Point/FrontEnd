@@ -17,3 +17,10 @@ export const PROMOS_FAILED = "PROMOS_FAILED";
 // favorites
 export const POST_FAVORITE = "POST_FAVORITE";
 export const ADD_FAVORITE = "ADD_FAVORITE";
+//login
+export const SET_LOGIN_STATE = "SET_LOGIN_STATE"
+export const SET_LOGOUT_STATE = "SET_LOGOUT_STATE"
+//register
+export const SET_REGISTER_STATE = "SET_REGISTER_STATE"
+//ReserveTable
+export const SET_RESERVETABLE = 'SET_RESERVETABLE'
