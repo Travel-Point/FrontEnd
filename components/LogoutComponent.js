@@ -15,14 +15,14 @@ class Logout extends Component {
                     source={require('../assets/aus.png')}
                     style={{
                         padding: 10,
-                        margin: 60,
+                        margin: 40,
                         height: 200,
                         width: 300,
                         resizeMode: "stretch",
                         alignItems: "center",
                     }}
                 />
-                <Button onPress={() => this.logout()} color="red" title="LogOut" />
+                <Button onPress={() => this.logout()} color="red" title="Log Out" />
             </View>
         );
     }

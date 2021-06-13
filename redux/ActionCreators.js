@@ -1,6 +1,5 @@
 import * as ActionTypes from "./ActionTypes";
 import { baseUrl } from "../shared/baseUrl";
-import { loginUrl } from '../shared/loginUrl';
 import { Alert } from 'react-native';
 
 // leaders
@@ -125,38 +124,36 @@ const addPromos = (promos) => ({
 export const postFavorite = (dishId) => (dispatch) => {
   setTimeout(() => {
     dispatch(addFavorite(dishId));
-  }, 2000);
+  }, 1000);
 };
 const addFavorite = (dishId) => ({
   type: ActionTypes.ADD_FAVORITE,
-  payload: dishId,
+  payload: dishId
+});
+
+export const deleteFavorite = (dishId) => ({
+  type: ActionTypes.DELETE_FAVORITE,
+  payload: dishId
 });
 
 //login
-export const login = (email, password) => {
-  return (dispatch) => { // don't forget to use dispatch here!
-    return fetch("http://localhost:5000/api/users/login", {
-      method: 'POST',
-      headers: {  // these could be different for your API call
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+export const login = (userId, name, password) => {
+  try {
+    return (dispatch) => { // don't forget to use dispatch here!
+      return fetch("http://192.168.1.6:5000/api/users/login", {
+        method: 'POST',
+        headers: {  // these could be different for your API call
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "name": name, "password": password }),
       },
-      body: JSON.stringify({ "email": email, "password": password }),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        if (json.message === 'Logged In') { // response success checking logic could differ
-          dispatch(setLoginState({ ...json, userId: email })); // our action is called here
-          Alert.alert('Success')
-        } else {
-          Alert.alert('Login Failed', 'Username or Password is incorrect');
-        }
-      })
-      .catch((err) => {
-        Alert.alert('Login Failed', 'Some error occured, please retry');
-        console.log(err);
-      });
-  };
+        dispatch(setLoginState({ userId: userId })), // our action is called here
+        Alert.alert('Success'))
+    }
+  } catch {
+    Alert.alert('Login Failed', 'Username or Password is incorrect');
+  }
 };
 
 export const setLoginState = (loginData) => {
@@ -177,24 +174,40 @@ export const setLogoutState = () => {
 
 //register
 export const register = (name, password, email) => {
-  return (dispatch) => { // don't forget to use dispatch here!
-    return fetch(loginUrl + 'signup', {
-      method: 'POST',
-      headers: {  // these could be different for your API call
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+  return () => { // don't forget to use dispatch here!
+    try {
+      return fetch("http://192.168.1.6:5000/api/users/signup", {
+        method: 'POST',
+        headers: {  // these could be different for your API call
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "name": name, "password": password, "email": email }),
       },
-      body: JSON.stringify({ "name": name, "password": password, "email": email }),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        if (json.message === 'Register Successfully.') { // response success checking logic could differ
-          // dispatch(setLoginState({ ...json, userId: name })); // our action is called here
-          Alert.alert('Registed')
-        } else {
-          Alert.alert('Login Failed', 'Username or Password is incorrect');
-        }
-      })
-
+        Alert.alert('Registed')
+      )
+    } catch {
+      Alert.alert('Register failed', 'This user already existed.');
+    }
   };
+};
+
+//reserve
+export const bill = (guests, smoking, date, userId) => {
+  return () => {
+    try {
+      return fetch("http://192.168.1.6:5000/api/reserve/", {
+        method: 'POST',
+        headers: {  // these could be different for your API call
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "numberOfGuest": guests, "guestName": userId, "isSmoking": smoking, "dateReserve": date }),
+      },
+        Alert.alert('Reserve successfully.')
+      )
+    } catch {
+      Alert.alert('Reserve Failed');
+    }
+  }
 };

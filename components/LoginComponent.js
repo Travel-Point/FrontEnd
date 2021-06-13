@@ -5,11 +5,11 @@ import { Input, CheckBox } from 'react-native-elements';
 import { login } from '../redux/ActionCreators';
 
 const mapDispatchToProps = (dispatch) => ({
-    login: (email, password) => dispatch(login(email, password))
+    login: (name, password) => dispatch(login(name, password))
 });
 class Login extends Component {
     state = {
-        email: '',
+        name: '',
         password: '',
     }
 
@@ -19,8 +19,8 @@ class Login extends Component {
                 <Input
                     placeholder='Username'
                     leftIcon={{ name: 'user-o', type: 'font-awesome' }}
-                    value={this.state.email}
-                    onChangeText={(u) => this.setState({ email: u.toLowerCase() })} />
+                    value={this.state.name}
+                    onChangeText={(u) => this.setState({ name: u.toLowerCase() })} />
                 <Input
                     placeholder='Password'
                     leftIcon={{ name: 'key', type: 'font-awesome' }}
@@ -28,13 +28,13 @@ class Login extends Component {
                     secureTextEntry={true}
                     onChangeText={(p) => this.setState({ password: p.toLowerCase() })} />
                 <View style={{ marginTop: 20 }}>
-                    <Button title='Login' color='#7cc' onPress={() => this.login(this.state.email, this.state.password)} />
+                    <Button title='LOGIN' color='#205AA7' onPress={() => this.login(this.state.name, this.state.password)} />
                 </View>
             </View>
         );
     }
-    login(email, password) {
-        this.props.login(email, password);
+    login(name, password) {
+        this.props.login(name, password);
     }
 };
 

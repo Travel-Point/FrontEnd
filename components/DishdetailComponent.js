@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View, Text, ScrollView, FlatList, Modal, Button } from "react-native";
 import { Card, Image, Icon, Rating, Input } from "react-native-elements";
+import * as Animatable from 'react-native-animatable';
 
 import { baseUrl } from "../shared/baseUrl";
 // redux
@@ -118,17 +119,21 @@ class Dishdetail extends Component {
     return (
       // <RenderDish dish={this.state.dishes[dishId]} />
       <ScrollView>
-        <RenderDish
-          dish={this.props.dishes.dishes[dishId]}
-          favorite={this.props.favorites.some((el) => el === dishId)}
-          onPressFavorite={() => this.markFavorite(dishId)}
-          onPressComment={() => this.setState({ showModal: true })}
-        />
-        <RenderComments
-          comments={this.props.comments.comments.filter(
-            (comment) => comment.dishId === dishId
-          )}
-        />
+        <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
+          <RenderDish
+            dish={this.props.dishes.dishes[dishId]}
+            favorite={this.props.favorites.some((el) => el === dishId)}
+            onPressFavorite={() => this.markFavorite(dishId)}
+            onPressComment={() => this.setState({ showModal: true })}
+          />
+        </Animatable.View>
+        <Animatable.View animation="fadeInUp" duration={2000} delay={1000}>
+          <RenderComments
+            comments={this.props.comments.comments.filter(
+              (comment) => comment.dishId === dishId
+            )}
+          />
+        </Animatable.View>
         <Modal
           visible={this.state.showModal}
           onRequestClose={() => this.setState({ showModal: false })}

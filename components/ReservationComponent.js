@@ -12,6 +12,23 @@ import { Icon } from "react-native-elements";
 import { Picker } from "@react-native-community/picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { format } from "date-fns";
+import { bill } from "../redux/ActionCreators";
+import { Alert } from "react-native";
+import * as Animatable from "react-native-animatable";
+import * as Permissions from "expo-permissions";
+import * as Notifications from "expo-notifications";
+import { connect } from "react-redux";
+
+const mapDispatchToProps = (dispatch) => ({
+  confirmBill: (guests, smoking, date, userId) =>
+    dispatch(bill(guests, smoking, date, userId)),
+});
+
+const mapStateToProps = (state) => {
+  return {
+    login: state.login,
+  };
+};
 
 class Reservation extends Component {
   constructor(props) {
@@ -24,61 +41,63 @@ class Reservation extends Component {
       showModal: false,
     };
   }
+
   render() {
     return (
       <ScrollView>
-        <View style={styles.formRow}>
-          <Text style={styles.formLabel}>Number of Guests</Text>
-          <Picker
-            style={styles.formItem}
-            selectedValue={this.state.guests}
-            onValueChange={(value) => this.setState({ guests: value })}
-          >
-            <Picker.Item label="1" value="1" />
-            <Picker.Item label="2" value="2" />
-            <Picker.Item label="3" value="3" />
-            <Picker.Item label="4" value="4" />
-            <Picker.Item label="5" value="5" />
-            <Picker.Item label="6" value="6" />
-          </Picker>
-        </View>
-        <View style={styles.formRow}>
-          <Text style={styles.formLabel}>Smoking/No-Smoking?</Text>
-          <Switch
-            style={styles.formItem}
-            value={this.state.smoking}
-            onValueChange={(value) => this.setState({ smoking: value })}
-          />
-        </View>
-        <View style={styles.formRow}>
-          <Text style={styles.formLabel}>Date and Time</Text>
-          <Icon
-            name="schedule"
-            size={36}
-            onPress={() => this.setState({ showDatePicker: true })}
-          />
-          <Text style={{ marginLeft: 10 }}>
-            {format(this.state.date, "dd/MM/yyyy --- HH:mm")}
-          </Text>
-          <DateTimePickerModal
-            mode="datetime"
-            isVisible={this.state.showDatePicker}
-            isDarkModeEnabled={false}
-            onConfirm={(date) =>
-              this.setState({ date: date, showDatePicker: false })
-            }
-            onCancel={() => this.setState({ showDatePicker: false })}
-          />
-        </View>
-        <View style={styles.formRow}>
-          <Button
-            title="Reserve"
-            color="#FCF54C"
-            onPress={() => this.handleReservation()}
-          />
-        </View>
+        <Animatable.View animation="zoomIn" duration={2000}>
+          <View style={styles.formRow}>
+            <Text style={styles.formLabel}>Number of Guests</Text>
+            <Picker
+              style={styles.formItem}
+              selectedValue={this.state.guests}
+              onValueChange={(value) => this.setState({ guests: value })}
+            >
+              <Picker.Item label="1" value="1" />
+              <Picker.Item label="2" value="2" />
+              <Picker.Item label="3" value="3" />
+              <Picker.Item label="4" value="4" />
+              <Picker.Item label="5" value="5" />
+              <Picker.Item label="6" value="6" />
+            </Picker>
+          </View>
+          <View style={styles.formRow}>
+            <Text style={styles.formLabel}>Smoking/No-Smoking?</Text>
+            <Switch
+              style={styles.formItem}
+              value={this.state.smoking}
+              onValueChange={(value) => this.setState({ smoking: value })}
+            />
+          </View>
+          <View style={styles.formRow}>
+            <Text style={styles.formLabel}>Date and Time</Text>
+            <Icon
+              name="schedule"
+              size={36}
+              onPress={() => this.setState({ showDatePicker: true })}
+            />
+            <Text style={{ marginLeft: 10 }}>
+              {format(this.state.date, "dd/MM/yyyy --- HH:mm")}
+            </Text>
+            <DateTimePickerModal
+              mode="datetime"
+              isVisible={this.state.showDatePicker}
+              isDarkModeEnabled={false}
+              onConfirm={(date) =>
+                this.setState({ date: date, showDatePicker: false })
+              }
+              onCancel={() => this.setState({ showDatePicker: false })}
+            />
+          </View>
+          <View style={styles.formRow}>
+            <Button
+              title="Reserve"
+              color="#205AA7"
+              onPress={() => this.handleReservation()}
+            />
+          </View>
 
-        <Modal
+          {/* <Modal
           animationType={"slide"}
           visible={this.state.showModal}
           onRequestClose={() => this.setState({ showModal: false })}
@@ -103,13 +122,87 @@ class Reservation extends Component {
               }}
             />
           </View>
-        </Modal>
+        </Modal> */}
+        </Animatable.View>
       </ScrollView>
     );
   }
+
   handleReservation() {
-    this.setState({ showModal: true });
+    {
+      this.props.login.isLoggedIn
+        ? Alert.alert(
+          "Your Reservation OK?",
+          "Number of Guests:" +
+          this.state.guests +
+          "\nSmoking? " +
+          this.state.smoking +
+          "\nDate and time:" +
+          this.state.date,
+          [
+            {
+              text: "Cancel",
+              onPress: () => {
+                this.resetForm();
+              },
+            },
+            {
+              text: "OK",
+              onPress: () => {
+                this.presentLocalNotification(this.state.date);
+                this.props.confirmBill(
+                  this.state.guests,
+                  this.state.smoking,
+                  this.state.date,
+                  this.props.userId,
+                );
+                this.resetForm();
+              },
+            },
+          ],
+          { cancelable: false }
+        )
+        : Alert.alert("Please login before using this service");
+    }
   }
+  async obtainNotificationPermission() {
+    let permission = await Permissions.getAsync(
+      Permissions.USER_FACING_NOTIFICATIONS
+    );
+    if (permission.status !== "granted") {
+      permission = await Permissions.askAsync(
+        Permissions.USER_FACING_NOTIFICATIONS
+      );
+      if (permission.status !== "granted") {
+        Alert.alert("Permission not granted to show notifications");
+      }
+    }
+    return permission;
+  }
+  async presentLocalNotification(date) {
+    await this.obtainNotificationPermission();
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+      }),
+    });
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Your Reservation",
+        body: "Reservation for " + date + " requested",
+        sound: true,
+        vibrate: true,
+      },
+      trigger: null,
+    });
+  }
+
+  confirmBill(guests, smoking, date, userId) {
+    this.props.confirmBill(guests, smoking, date, userId);
+  }
+
   resetForm() {
     this.setState({
       guests: 1,
@@ -120,7 +213,8 @@ class Reservation extends Component {
     });
   }
 }
-export default Reservation;
+
+export default connect(mapStateToProps, mapDispatchToProps)(Reservation);
 
 const styles = StyleSheet.create({
   formRow: {

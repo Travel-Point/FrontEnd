@@ -11,14 +11,6 @@ import { promotions } from "./promotions";
 import { favorites } from "./favorites";
 import { login } from './login'
 
-// export const ConfigureStore = () => {
-//   const store = createStore(
-//     combineReducers({ leaders, dishes, comments, promotions, favorites, login }),
-//     applyMiddleware(thunk, logger)
-//   );
-//   return store;
-// };
-
 const config = { key: 'root', storage: AsyncStorage, debug: true };
 
 export const ConfigureStore = () => {
