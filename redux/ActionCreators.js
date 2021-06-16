@@ -1,7 +1,7 @@
 import * as ActionTypes from "./ActionTypes";
 import { baseUrl } from "../shared/baseUrl";
-import { loginUrl } from '../shared/loginUrl';
-import { Alert } from 'react-native';
+import { loginUrl } from "../shared/loginUrl";
+import { Alert } from "react-native";
 
 // leaders
 export const fetchLeaders = () => (dispatch) => {
@@ -134,26 +134,29 @@ const addFavorite = (dishId) => ({
 
 //login
 export const login = (email, password) => {
-  return (dispatch) => { // don't forget to use dispatch here!
+  return (dispatch) => {
+    // don't forget to use dispatch here!
     return fetch("http://localhost:5000/api/users/login", {
-      method: 'POST',
-      headers: {  // these could be different for your API call
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+      method: "POST",
+      headers: {
+        // these could be different for your API call
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ "email": email, "password": password }),
+      body: JSON.stringify({ email: email, password: password }),
     })
       .then((response) => response.json())
       .then((json) => {
-        if (json.message === 'Logged In') { // response success checking logic could differ
+        if (json.message === "Logged In") {
+          // response success checking logic could differ
           dispatch(setLoginState({ ...json, userId: email })); // our action is called here
-          Alert.alert('Success')
+          Alert.alert("Success");
         } else {
-          Alert.alert('Login Failed', 'Username or Password is incorrect');
+          Alert.alert("Login Failed", "Username or Password is incorrect");
         }
       })
       .catch((err) => {
-        Alert.alert('Login Failed', 'Some error occured, please retry');
+        Alert.alert("Login Failed", "Some error occured, please retry");
         console.log(err);
       });
   };
@@ -170,31 +173,33 @@ export const setLogoutState = () => {
   return {
     type: ActionTypes.SET_LOGOUT_STATE,
     payload: {
-      login: false
+      login: false,
     },
   };
 };
 
 //register
 export const register = (name, password, email) => {
-  return (dispatch) => { // don't forget to use dispatch here!
-    return fetch(loginUrl + 'signup', {
-      method: 'POST',
-      headers: {  // these could be different for your API call
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+  return (dispatch) => {
+    // don't forget to use dispatch here!
+    return fetch(loginUrl + "signup", {
+      method: "POST",
+      headers: {
+        // these could be different for your API call
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ "name": name, "password": password, "email": email }),
+      body: JSON.stringify({ name: name, password: password, email: email }),
     })
       .then((response) => response.json())
       .then((json) => {
-        if (json.message === 'Register Successfully.') { // response success checking logic could differ
+        if (json.message === "Register Successfully.") {
+          // response success checking logic could differ
           // dispatch(setLoginState({ ...json, userId: name })); // our action is called here
-          Alert.alert('Registed')
+          Alert.alert("Registed");
         } else {
-          Alert.alert('Login Failed', 'Username or Password is incorrect');
+          Alert.alert("Login Failed", "Username or Password is incorrect");
         }
-      })
-
+      });
   };
 };
