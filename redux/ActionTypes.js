@@ -15,8 +15,9 @@ export const PROMOS_LOADING = "PROMOS_LOADING";
 export const ADD_PROMOS = "ADD_PROMOS";
 export const PROMOS_FAILED = "PROMOS_FAILED";
 // favorites
-export const POST_FAVORITE = "POST_FAVORITE";
-export const ADD_FAVORITE = "ADD_FAVORITE";
+export const POST_FAVORITE = 'POST_FAVORITE';
+export const ADD_FAVORITE = 'ADD_FAVORITE';
+export const DELETE_FAVORITE = 'DELETE_FAVORITE';
 //login
 export const SET_LOGIN_STATE = "SET_LOGIN_STATE";
 export const SET_LOGOUT_STATE = "SET_LOGOUT_STATE";

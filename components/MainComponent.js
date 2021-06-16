@@ -22,7 +22,6 @@ import Login from "./LoginComponent";
 import Register from "./RegisterComponent";
 import Logout from "./LogoutComponent";
 import QR from "./QRComponent";
-import TravelPoint from "./TravelPoint";
 
 // redux
 import { connect } from "react-redux";
@@ -50,7 +49,7 @@ function TabNavigatorScreen() {
     <TabNavigator.Navigator
       initialRouteName="Login"
       tabBarOptions={{
-        activeBackgroundColor: "#000000",
+        activeBackgroundColor: "#205AA7",
         inactiveBackgroundColor: "#fff",
         activeTintColor: "#fff",
         inactiveTintColor: "gray",
@@ -126,7 +125,7 @@ function LoginNavigatorScreen() {
     <LoginNavigator.Navigator
       initialRouteName="LoginRegister"
       screenOptions={{
-        headerStyle: { backgroundColor: "#000000" },
+        headerStyle: { backgroundColor: "#205AA7" },
         headerTintColor: "#fff",
         headerTitleStyle: { color: "#fff" },
       }}
@@ -156,7 +155,7 @@ function LogoutNavigatorScreen() {
     <LogoutNavigator.Navigator
       initialRouteName="LogOut"
       screenOptions={{
-        headerStyle: { backgroundColor: "#000000" },
+        headerStyle: { backgroundColor: "#205AA7" },
         headerTintColor: "#fff",
         headerTitleStyle: { color: "#fff" },
       }}
@@ -399,38 +398,12 @@ class MainNavigatorScreen extends Component {
           }}
         />
         <MainNavigator.Screen
-          name="About"
-          component={AboutNavigatorScreen}
-          options={{
-            headerShown: false,
-            title: "About Us",
-            drawerIcon: ({ focused, size }) => (
-              <Icon name="info" size={size} color={focused ? "#7cc" : "#ccc"} />
-            ),
-          }}
-        />
-        <MainNavigator.Screen
           name="Menu"
           component={MenuNavigatorScreen}
           options={{
             headerShown: false,
             drawerIcon: ({ focused, size }) => (
               <Icon name="menu" size={size} color={focused ? "#7cc" : "#ccc"} />
-            ),
-          }}
-        />
-        <MainNavigator.Screen
-          name="Contact"
-          component={ContactNavigatorScreen}
-          options={{
-            headerShown: false,
-            title: "Contact Us",
-            drawerIcon: ({ focused, size }) => (
-              <Icon
-                name="contacts"
-                size={size}
-                color={focused ? "#7cc" : "#ccc"}
-              />
             ),
           }}
         />
@@ -450,35 +423,20 @@ class MainNavigatorScreen extends Component {
             ),
           }}
         />
-        <MainNavigator.Screen
-          name="Reservation"
-          component={ReservationNavigatorScreen}
-          options={{
-            headerShown: false,
-            title: "Reserve Table",
-            drawerIcon: ({ focused, size }) => (
-              <Icon
-                name="cutlery"
-                type="font-awesome"
-                size={size}
-                color={focused ? "#7cc" : "#ccc"}
-              />
-            ),
-          }}
-        />
         {this.props.login.isLoggedIn ? (
           <>
             <MainNavigator.Screen
-              name={` ${this.props.login.userId}'s Shopping Cart`}
-              component={FavoritesNavigatorScreen}
+              name="Reservation"
+              component={ReservationNavigatorScreen}
               options={{
                 headerShown: false,
+                title: "Reserve Table",
                 drawerIcon: ({ focused, size }) => (
                   <Icon
-                    name="user-circle-o"
+                    name="cutlery"
                     type="font-awesome"
                     size={size}
-                    color={focused ? "#000000" : "#ccc"}
+                    color={focused ? "#7cc" : "#ccc"}
                   />
                 ),
               }}
@@ -499,7 +457,7 @@ class MainNavigatorScreen extends Component {
               }}
             />
             <MainNavigator.Screen
-              name="LogOut"
+              name="Log Out"
               component={LogoutNavigatorScreen}
               options={{
                 headerShown: false,
@@ -531,6 +489,32 @@ class MainNavigatorScreen extends Component {
             }}
           />
         )}
+        <MainNavigator.Screen
+          name="Contact"
+          component={ContactNavigatorScreen}
+          options={{
+            headerShown: false,
+            title: "Contact Us",
+            drawerIcon: ({ focused, size }) => (
+              <Icon
+                name="contacts"
+                size={size}
+                color={focused ? "#7cc" : "#ccc"}
+              />
+            ),
+          }}
+        />
+        <MainNavigator.Screen
+          name="About"
+          component={AboutNavigatorScreen}
+          options={{
+            headerShown: false,
+            title: "About Us",
+            drawerIcon: ({ focused, size }) => (
+              <Icon name="info" size={size} color={focused ? "#7cc" : "#ccc"} />
+            ),
+          }}
+        />
       </MainNavigator.Navigator>
     );
   }
@@ -578,13 +562,6 @@ class Main extends Component {
     return (
       <NavigationContainer>
         <MainNavigatorScreen login={this.props.login} />
-        {this.props.login.isLoggedIn ? (
-          <TravelPoint />
-        )
-          :
-          <>
-          </>
-        }
       </NavigationContainer>
     );
   }
