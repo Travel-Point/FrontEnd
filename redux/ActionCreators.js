@@ -1,6 +1,8 @@
 import * as ActionTypes from "./ActionTypes";
 import { baseUrl } from "../shared/baseUrl";
 import { Alert } from "react-native";
+import { loginUrl } from "../shared/loginUrl";
+import { reserveUrl } from "../shared/reserveUrl";
 
 // leaders
 export const fetchLeaders = () => (dispatch) => {
@@ -137,28 +139,35 @@ export const deleteFavorite = (dishId) => ({
 });
 
 //login
-export const login = (userId, name, password) => {
-  try {
-    return (dispatch) => {
-      // don't forget to use dispatch here!
-      return fetch(
-        "http://192.168.1.6:5000/api/users/login",
-        {
-          method: "POST",
-          headers: {
-            // these could be different for your API call
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ name: name, password: password }),
+export const login = (name, password) => {
+  return (dispatch) => {
+    // don't forget to use dispatch here!
+    return fetch(
+      loginUrl + "login",
+      {
+        method: "POST",
+        headers: {
+          // these could be different for your API call
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
-        dispatch(setLoginState({ userId: userId })), // our action is called here
-        Alert.alert("Success")
-      );
-    };
-  } catch {
-    Alert.alert("Login Failed", "Username or Password is incorrect");
-  }
+        body: JSON.stringify({ name: name, password: password }),
+      },
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.message === 'Log in successfully.') { // response success checking logic could differ
+          dispatch(setLoginState({ ...json, userId: name })); // our action is called here
+          Alert.alert('Success')
+        } else {
+          Alert.alert('Login Failed', 'Username or Password is incorrect');
+        }
+      })
+      .catch((err) => {
+        Alert.alert('Login Failed', 'Some error occured, please retry');
+        console.log(err);
+      });
+  };
 };
 
 export const setLoginState = (loginData) => {
@@ -181,54 +190,64 @@ export const setLogoutState = () => {
 export const register = (name, password, email) => {
   return () => {
     // don't forget to use dispatch here!
-    try {
-      return fetch(
-        "http://192.168.1.6:5000/api/users/signup",
-        {
-          method: "POST",
-          headers: {
-            // these could be different for your API call
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: name,
-            password: password,
-            email: email,
-          }),
+    return fetch(
+      loginUrl + "signup",
+      {
+        method: "POST",
+        headers: {
+          // these could be different for your API call
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
-        Alert.alert("Registed")
-      );
-    } catch {
-      Alert.alert("Register failed", "This user already existed.");
-    }
+        body: JSON.stringify({
+          name: name,
+          password: password,
+          email: email,
+        }),
+      },
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.message === 'Sign up successfully.') { // response success checking logic could differ
+          Alert.alert('Success')
+        } else {
+          Alert.alert('Sign up Failed', 'Username or email existed.');
+        }
+      })
+      .catch((err) => {
+        Alert.alert('Sign up Failed', 'Some error occured, please retry');
+        console.log(err);
+      });
   };
 };
 
 //reserve
 export const bill = (guests, smoking, date, userId) => {
   return () => {
-    try {
-      return fetch(
-        "http://192.168.1.6:5000/api/reserve/",
-        {
-          method: "POST",
-          headers: {
-            // these could be different for your API call
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            numberOfGuest: guests,
-            guestName: userId,
-            isSmoking: smoking,
-            dateReserve: date,
-          }),
+    return fetch(
+      reserveUrl + userId,
+      {
+        method: "POST",
+        headers: {
+          // these could be different for your API call
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
-        Alert.alert("Reserve successfully.")
-      );
-    } catch {
-      Alert.alert("Reserve Failed");
-    }
+        body: JSON.stringify({
+          "numberofguest": guests,
+          "creator": userId,
+          "smoking": smoking,
+          "date": date,
+        }),
+      },
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.message === 'Reserve successfully.') { // response success checking logic could differ
+          Alert.alert('Reserve successfully.')
+        } else {
+          Alert.alert('Reserve Failed', 'Some error occured, please retry');
+        }
+      })
   };
 };

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import {
   StyleSheet,
   View,
@@ -7,17 +8,16 @@ import {
   Switch,
   Button,
   Modal,
+  Alert,
 } from "react-native";
 import { Icon } from "react-native-elements";
 import { Picker } from "@react-native-community/picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { format } from "date-fns";
-import { bill } from "../redux/ActionCreators";
-import { Alert } from "react-native";
 import * as Animatable from "react-native-animatable";
 import * as Permissions from "expo-permissions";
 import * as Notifications from "expo-notifications";
-import { connect } from "react-redux";
+import { bill } from "../redux/ActionCreators";
 
 const mapDispatchToProps = (dispatch) => ({
   confirmBill: (guests, smoking, date, userId) =>
@@ -92,43 +92,17 @@ class Reservation extends Component {
           <View style={styles.formRow}>
             <Button
               title="Reserve"
-              color="#205AA7"
+              color="#8ED1FC"
               onPress={() => this.handleReservation()}
             />
           </View>
-
-          {/* <Modal
-          animationType={"slide"}
-          visible={this.state.showModal}
-          onRequestClose={() => this.setState({ showModal: false })}
-        >
-          <View style={styles.modal}>
-            <Text style={styles.modalTitle}>Your Reservation</Text>
-            <Text style={styles.modalText}>
-              Number of Guests: {this.state.guests}
-            </Text>
-            <Text style={styles.modalText}>
-              Smoking?: {this.state.smoking ? "Yes" : "No"}
-            </Text>
-            <Text style={styles.modalText}>
-              Date and Time: {format(this.state.date, "dd/MM/yyyy --- HH:mm")}
-            </Text>
-            <Button
-              title="Close"
-              color="#FCF54C"
-              onPress={() => {
-                this.setState({ showModal: false });
-                this.resetForm();
-              }}
-            />
-          </View>
-        </Modal> */}
         </Animatable.View>
       </ScrollView>
     );
   }
 
   handleReservation() {
+    // this.setState({ showModal: true });
     {
       this.props.login.isLoggedIn
         ? Alert.alert(
@@ -154,7 +128,7 @@ class Reservation extends Component {
                   this.state.guests,
                   this.state.smoking,
                   this.state.date,
-                  this.props.userId,
+                  this.props.login.user._id
                 );
                 this.resetForm();
               },
@@ -213,7 +187,6 @@ class Reservation extends Component {
     });
   }
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(Reservation);
 
 const styles = StyleSheet.create({
@@ -231,7 +204,6 @@ const styles = StyleSheet.create({
   formItem: {
     flex: 1,
   },
-
   modal: {
     justifyContent: "center",
     margin: 20,
@@ -239,7 +211,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    backgroundColor: "#FCF54C",
+    backgroundColor: "#000000",
     textAlign: "center",
     color: "white",
     marginBottom: 20,

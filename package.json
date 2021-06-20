@@ -7,7 +7,7 @@
     "web": "expo start --web",
     "eject": "expo eject"
   },
-  "proxy": "http://localhost:5000",
+  
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/datetimepicker": "^3.5.2",

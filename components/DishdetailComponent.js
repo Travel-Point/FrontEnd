@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, ScrollView, FlatList, Modal, Button } from "react-native";
+import { View, Text, ScrollView, FlatList, Modal, Button, LogBox } from "react-native";
 import { Card, Image, Icon, Rating, Input } from "react-native-elements";
 import * as Animatable from 'react-native-animatable';
 
@@ -14,6 +14,7 @@ const mapStateToProps = (state) => {
     dishes: state.dishes,
     comments: state.comments,
     favorites: state.favorites,
+    login: state.login
   };
 };
 const mapDispatchToProps = (dispatch) => ({
@@ -48,10 +49,17 @@ class RenderDish extends Component {
               type="font-awesome"
               color="#f50"
               name={this.props.favorite ? "heart" : "heart-o"}
-              onPress={() =>
-                this.props.favorite
-                  ? alert("Already favorite")
-                  : this.props.onPressFavorite()
+              onPress={() => {
+                this.props.login ? (
+                  this.props.favorite ? alert("Already in your Card")
+                    :
+                    this.props.onPressFavorite()
+                )
+                  :
+                  (
+                    alert("Please login before using this service")
+                  )
+                }
               }
             />
             <Icon
@@ -112,6 +120,7 @@ class Dishdetail extends Component {
       author: "",
       comment: "",
     };
+    LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
   }
   render() {
     const dishId = parseInt(this.props.route.params.dishId);
@@ -123,6 +132,7 @@ class Dishdetail extends Component {
           <RenderDish
             dish={this.props.dishes.dishes[dishId]}
             favorite={this.props.favorites.some((el) => el === dishId)}
+            login = {this.props.login.isLoggedIn}
             onPressFavorite={() => this.markFavorite(dishId)}
             onPressComment={() => this.setState({ showModal: true })}
           />
@@ -146,6 +156,7 @@ class Dishdetail extends Component {
             />
             <View style={{ height: 20 }} />
             <Input
+              //value={this.state.author}
               value={this.state.author}
               placeholder="Author"
               leftIcon={{ name: "user-o", type: "font-awesome" }}
@@ -182,7 +193,13 @@ class Dishdetail extends Component {
     );
   }
   markFavorite(dishId) {
-    this.props.postFavorite(dishId);
+    if (this.props.login.isLoggedIn) {
+      alert("Added to your card ")
+      this.props.postFavorite(dishId);
+    }
+    else {
+      alert("Please login before using this service")
+    }
   }
 
   submitComment(dishId) {

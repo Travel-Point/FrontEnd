@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { FlatList, Text, Alert } from 'react-native';
-import { ListItem, Avatar } from 'react-native-elements';
+import { FlatList, Text, Alert, View } from 'react-native';
+import { ListItem, Avatar, Image } from 'react-native-elements';
 import Loading from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
 import Swipeout from 'react-native-swipeout';
@@ -24,16 +24,50 @@ const mapDispatchToProps = dispatch => ({
 
 class Favorites extends Component {
   render() {
+    // if (this.props.dishes.isLoading) {
+    //   return (<Loading />);
+    // } else if (this.props.dishes.errMess) {
+    //   return (<Text>{this.props.dishes.errMess}</Text>);
+    // } else {
+    //   const dishes = this.props.dishes.dishes.filter((dish) => this.props.favorites.some((el) => el === dish.id));
+    //   return (
+    //     <FlatList data={dishes}
+    //       renderItem={({ item, index }) => this.renderMenuItem(item, index)}
+    //       keyExtractor={item => item.id.toString()} />
+    //   );
+    // }
     if (this.props.dishes.isLoading) {
-      return (<Loading />);
+      return <Loading />;
     } else if (this.props.dishes.errMess) {
-      return (<Text>{this.props.dishes.errMess}</Text>);
-    } else {
-      const dishes = this.props.dishes.dishes.filter((dish) => this.props.favorites.some((el) => el === dish.id));
+      return <Text>{this.props.dishes.errMess}</Text>;
+    } else if (this.props.favorites.length === 0) {
       return (
-        <FlatList data={dishes}
-          renderItem={({ item, index }) => this.renderMenuItem(item, index)}
-          keyExtractor={item => item.id.toString()} />
+        <View style={{ justifyContent: "center", marginTop: 50 }}>
+          <Image
+            source={require('../assets/done.png')}
+            style={{
+              padding: 10,
+              margin: 40,
+              height: 300,
+              width: 300,
+              resizeMode: "stretch",
+              alignItems: "center",
+            }}
+          />
+        </View>
+      )
+    } else {
+      const dishes = this.props.dishes.dishes.filter((p) =>
+        this.props.favorites.some((el) => el === p.id)
+      );
+      return (
+        <>
+          <FlatList
+            data={dishes}
+            renderItem={({ item, index }) => this.renderMenuItem(item, index)}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        </>
       );
     }
   }

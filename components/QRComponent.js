@@ -7,8 +7,7 @@ class QRComponent extends Component {
         return (
             <View style={{ alignItems: "center", marginTop: 150 }}>
                 <QRCode
-                    value="Done!"
-                    logo={require('../assets/done.png')}
+                    value="Success!"
                     size={300}
                     logoBackgroundColor="transparent"
                 />

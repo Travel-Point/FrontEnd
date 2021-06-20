@@ -22,6 +22,7 @@ import Login from "./LoginComponent";
 import Register from "./RegisterComponent";
 import Logout from "./LogoutComponent";
 import QR from "./QRComponent";
+import ShoppingCart from "./ShoppingCart";
 
 // redux
 import { connect } from "react-redux";
@@ -407,24 +408,24 @@ class MainNavigatorScreen extends Component {
             ),
           }}
         />
-        <MainNavigator.Screen
-          name="Favorites"
-          component={FavoritesNavigatorScreen}
-          options={{
-            headerShown: false,
-            title: "My Favorites",
-            drawerIcon: ({ focused, size }) => (
-              <Icon
-                name="heart"
-                type="font-awesome"
-                size={size}
-                color={focused ? "#7cc" : "#ccc"}
-              />
-            ),
-          }}
-        />
         {this.props.login.isLoggedIn ? (
           <>
+            <MainNavigator.Screen
+              name="Favorites"
+              component={FavoritesNavigatorScreen}
+              options={{
+                headerShown: false,
+                title: "Shopping Carts",
+                drawerIcon: ({ focused, size }) => (
+                  <Icon
+                    name="heart"
+                    type="font-awesome"
+                    size={size}
+                    color={focused ? "#7cc" : "#ccc"}
+                  />
+                ),
+              }}
+            />
             <MainNavigator.Screen
               name="Reservation"
               component={ReservationNavigatorScreen}
@@ -451,7 +452,7 @@ class MainNavigatorScreen extends Component {
                     name="qrcode"
                     type="font-awesome"
                     size={size}
-                    color={focused ? "#000000" : "#ccc"}
+                    color={focused ? "#7cc" : "#ccc"}
                   />
                 ),
               }}
@@ -466,7 +467,7 @@ class MainNavigatorScreen extends Component {
                     name="sign-out"
                     type="font-awesome"
                     size={size}
-                    color={focused ? "#000000" : "#ccc"}
+                    color={focused ? "#7cc" : "#ccc"}
                   />
                 ),
               }}
@@ -535,7 +536,7 @@ function FavoritesNavigatorScreen() {
         name="Favorites"
         component={Favorites}
         options={({ navigation }) => ({
-          headerTitle: "My Favorites",
+          headerTitle: "Shopping Cart",
           headerLeft: () => (
             <Icon
               name="menu"
@@ -562,6 +563,7 @@ class Main extends Component {
     return (
       <NavigationContainer>
         <MainNavigatorScreen login={this.props.login} />
+        {this.props.login.isLoggedIn ? (<ShoppingCart component={FavoritesNavigatorScreen} />) : <></>}
       </NavigationContainer>
     );
   }
