@@ -8,9 +8,7 @@ import * as Animatable from "react-native-animatable";
 import { connect } from "react-redux";
 
 const mapStateToProps = () => {
-  return {
-
-  };
+  return {};
 };
 
 class Home extends Component {

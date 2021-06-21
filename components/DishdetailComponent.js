@@ -1,8 +1,18 @@
 import React, { Component } from "react";
-import { View, Text, ScrollView, FlatList, Modal, Button, LogBox } from "react-native";
-import { Card, Image, Icon, Rating, Input } from "react-native-elements";
-import * as Animatable from 'react-native-animatable';
-
+import {
+  View,
+  Text,
+  ScrollView,
+  FlatList,
+  Modal,
+  LogBox,
+  StyleSheet,
+  ImageBackground,
+  TouchableHighlight,
+} from "react-native";
+import { Card, Button, Icon, Rating, Input } from "react-native-elements";
+import * as Animatable from "react-native-animatable";
+import COLORS from "../shared/colors";
 import { baseUrl } from "../shared/baseUrl";
 // redux
 
@@ -14,7 +24,7 @@ const mapStateToProps = (state) => {
     dishes: state.dishes,
     comments: state.comments,
     favorites: state.favorites,
-    login: state.login
+    login: state.login,
   };
 };
 const mapDispatchToProps = (dispatch) => ({
@@ -28,50 +38,179 @@ class RenderDish extends Component {
     const dish = this.props.dish;
     if (dish != null) {
       return (
-        <Card>
-          <Image
+        <>
+          <ImageBackground
+            style={style.headerImage}
             source={{ uri: baseUrl + dish.image }}
-            style={{
-              width: "100%",
-              height: 100,
-              flexGrow: 1,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
           >
-            <Card.FeaturedTitle>{dish.name}</Card.FeaturedTitle>
-          </Image>
-          <Text style={{ margin: 10 }}>{dish.description}</Text>
-          <View style={{ flexDirection: "row", justifyContent: "center" }}>
-            <Icon
-              raised
-              reverse
-              type="font-awesome"
-              color="#f50"
-              name={this.props.favorite ? "heart" : "heart-o"}
-              onPress={() => {
-                this.props.login ? (
-                  this.props.favorite ? alert("Already in your Card")
-                    :
-                    this.props.onPressFavorite()
-                )
-                  :
-                  (
-                    alert("Please login before using this service")
-                  )
-                }
-              }
-            />
-            <Icon
-              raised
-              reverse
-              name="pencil"
-              type="font-awesome"
-              color="#3A2885"
-              onPress={() => this.props.onPressComment()}
-            />
+            {/* <View style={style.header}>
+              <Icon
+                name="arrow-back-ios"
+                size={28}
+                color={COLORS.white}
+                onPress={navigation.goBack}
+              />
+            </View> */}
+          </ImageBackground>
+
+          <View>
+            <View style={style.iconContainer}>
+              <Icon name="place" color={COLORS.white} size={28} />
+            </View>
+
+            <View style={{ marginTop: 20, paddingHorizontal: 20 }}>
+              <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                {dish.name}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontWeight: "400",
+                  color: COLORS.grey,
+                  marginTop: 5,
+                }}
+              >
+                {dish.location}
+              </Text>
+              <View
+                style={{
+                  marginTop: 10,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View style={{ flexDirection: "row" }}>
+                  <View style={{ flexDirection: "row" }}>
+                    <Icon name="star" size={20} color={COLORS.orange} />
+                    <Icon name="star" size={20} color={COLORS.orange} />
+                    <Icon name="star" size={20} color={COLORS.orange} />
+                    <Icon name="star" size={20} color={COLORS.orange} />
+                    <Icon name="star" size={20} color={COLORS.grey} />
+                  </View>
+                  <Text
+                    style={{ fontWeight: "bold", fontSize: 18, marginLeft: 5 }}
+                  >
+                    4.0
+                  </Text>
+                </View>
+                {/* <Text style={{ fontSize: 13, color: COLORS.grey }}>
+                  365reviews
+                </Text> */}
+              </View>
+              <View style={{ marginTop: 20 }}>
+                <Text
+                  style={{
+                    lineHeight: 20,
+                    color: COLORS.grey,
+                    textAlign: "justify",
+                  }}
+                >
+                  {dish.description}
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{
+                marginTop: 20,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                paddingLeft: 20,
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                Price per night
+              </Text>
+              <View style={style.priceTag}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: "bold",
+                    color: COLORS.grey,
+                    marginLeft: 5,
+                  }}
+                >
+                  ${dish.price}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    fontWeight: "bold",
+                    color: COLORS.grey,
+                    marginLeft: 5,
+                  }}
+                >
+                  +breakfast
+                </Text>
+              </View>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                paddingTop: 20,
+                paddingBottom: 20,
+              }}
+            >
+              <Button
+                title="Book Now"
+                onPress={() => {
+                  this.props.login
+                    ? this.props.favorite
+                      ? alert("Already in your Card")
+                      : this.props.onPressFavorite()
+                    : alert("Please login before using this service");
+                }}
+              />
+              <Text>&nbsp;&nbsp;&nbsp;&nbsp;</Text>
+              <Button
+                title="Comment"
+                onPress={() => this.props.onPressComment()}
+              />
+            </View>
           </View>
-        </Card>
+        </>
+
+        // <Card>
+        //   <Image
+        //     source={{ uri: baseUrl + dish.image }}
+        //     style={{
+        //       width: "100%",
+        //       height: 100,
+        //       flexGrow: 1,
+        //       alignItems: "center",
+        //       justifyContent: "center",
+        //     }}
+        //   >
+        //     <Card.FeaturedTitle>{dish.name}</Card.FeaturedTitle>
+        //   </Image>
+        //   <Text style={{ margin: 10 }}>{dish.description}</Text>
+        //   <View style={{ flexDirection: "row", justifyContent: "center" }}>
+        //     <Icon
+        //       raised
+        //       reverse
+        //       type="font-awesome"
+        //       color="#f50"
+        //       name={this.props.favorite ? "heart" : "heart-o"}
+        //       onPress={() => {
+        //         this.props.login
+        //           ? this.props.favorite
+        //             ? alert("Already in your Card")
+        //             : this.props.onPressFavorite()
+        //           : alert("Please login before using this service");
+        //       }}
+        //     />
+        //     <Icon
+        //       raised
+        //       reverse
+        //       name="pencil"
+        //       type="font-awesome"
+        //       color="#3A2885"
+        //       onPress={() => this.props.onPressComment()}
+        //     />
+        //   </View>
+        // </Card>
       );
     }
     return <View />;
@@ -81,15 +220,34 @@ class RenderDish extends Component {
 class RenderComments extends Component {
   render() {
     const comments = this.props.comments;
+
     return (
       <Card>
-        <Card.Title>Comments</Card.Title>
+        <Card.Title>All Comments</Card.Title>
         <Card.Divider />
         <FlatList
           data={comments}
           renderItem={({ item, index }) => this.renderCommentItem(item, index)}
           keyExtractor={(item) => item.id.toString()}
         />
+
+        {/* <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            paddingTop: 20,
+            paddingBottom: 20,
+          }}
+        >
+          <Icon
+            raised
+            reverse
+            name="pencil"
+            type="font-awesome"
+            color="#3A2885"
+            onPress={() => this.props.onPressComment()}
+          />
+        </View> */}
       </Card>
     );
   }
@@ -126,13 +284,12 @@ class Dishdetail extends Component {
     const dishId = parseInt(this.props.route.params.dishId);
 
     return (
-      // <RenderDish dish={this.state.dishes[dishId]} />
       <ScrollView>
         <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
           <RenderDish
             dish={this.props.dishes.dishes[dishId]}
             favorite={this.props.favorites.some((el) => el === dishId)}
-            login = {this.props.login.isLoggedIn}
+            login={this.props.login.isLoggedIn}
             onPressFavorite={() => this.markFavorite(dishId)}
             onPressComment={() => this.setState({ showModal: true })}
           />
@@ -156,7 +313,6 @@ class Dishdetail extends Component {
             />
             <View style={{ height: 20 }} />
             <Input
-              //value={this.state.author}
               value={this.state.author}
               placeholder="Author"
               leftIcon={{ name: "user-o", type: "font-awesome" }}
@@ -194,24 +350,14 @@ class Dishdetail extends Component {
   }
   markFavorite(dishId) {
     if (this.props.login.isLoggedIn) {
-      alert("Added to your card ")
+      alert("Added to your card ");
       this.props.postFavorite(dishId);
-    }
-    else {
-      alert("Please login before using this service")
+    } else {
+      alert("Please login before using this service");
     }
   }
 
   submitComment(dishId) {
-    // alert(
-    //   dishId +
-    //     ":" +
-    //     this.state.rating +
-    //     ":" +
-    //     this.state.author +
-    //     ":" +
-    //     this.state.comment
-    // );
     this.props.postComment(
       dishId,
       this.state.rating,
@@ -220,4 +366,53 @@ class Dishdetail extends Component {
     );
   }
 }
+
+const style = StyleSheet.create({
+  btn: {
+    height: 55,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 40,
+    backgroundColor: COLORS.primary,
+    marginHorizontal: 20,
+    borderRadius: 10,
+  },
+
+  priceTag: {
+    height: 40,
+    alignItems: "center",
+    marginLeft: 40,
+    paddingLeft: 20,
+    flex: 1,
+    backgroundColor: COLORS.secondary,
+    borderTopLeftRadius: 20,
+    borderBottomLeftRadius: 20,
+    flexDirection: "row",
+  },
+  iconContainer: {
+    position: "absolute",
+    height: 60,
+    width: 60,
+    backgroundColor: COLORS.primary,
+    top: -30,
+    right: 20,
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerImage: {
+    height: 400,
+    borderBottomRightRadius: 40,
+    borderBottomLeftRadius: 40,
+    overflow: "hidden",
+  },
+  header: {
+    marginTop: 60,
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 20,
+    justifyContent: "space-between",
+  },
+});
+
 export default connect(mapStateToProps, mapDispatchToProps)(Dishdetail);

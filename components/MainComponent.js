@@ -15,7 +15,6 @@ import Home from "./HomeComponent";
 import About from "./AboutComponent";
 import Menu from "./MenuComponent";
 import Dishdetail from "./DishdetailComponent";
-import Contact from "./ContactComponent";
 import Reservation from "./ReservationComponent";
 import Favorites from "./FavoriteComponent";
 import Login from "./LoginComponent";
@@ -275,36 +274,6 @@ function MenuNavigatorScreen() {
   );
 }
 
-const ContactNavigator = createStackNavigator();
-function ContactNavigatorScreen() {
-  return (
-    <ContactNavigator.Navigator
-      initialRouteName="Contact"
-      screenOptions={{
-        headerStyle: { backgroundColor: "#205AA7" },
-        headerTintColor: "#fff",
-        headerTitleStyle: { color: "#fff" },
-      }}
-    >
-      <ContactNavigator.Screen
-        name="Contact"
-        component={Contact}
-        options={({ navigation }) => ({
-          headerTitle: "Contact",
-          headerLeft: () => (
-            <Icon
-              name="menu"
-              size={36}
-              color="#fff"
-              onPress={() => navigation.toggleDrawer()}
-            />
-          ),
-        })}
-      />
-    </ContactNavigator.Navigator>
-  );
-}
-
 function ReservationNavigatorScreen() {
   const ReservationNavigator = createStackNavigator();
   return (
@@ -490,21 +459,7 @@ class MainNavigatorScreen extends Component {
             }}
           />
         )}
-        <MainNavigator.Screen
-          name="Contact"
-          component={ContactNavigatorScreen}
-          options={{
-            headerShown: false,
-            title: "Contact Us",
-            drawerIcon: ({ focused, size }) => (
-              <Icon
-                name="contacts"
-                size={size}
-                color={focused ? "#7cc" : "#ccc"}
-              />
-            ),
-          }}
-        />
+
         <MainNavigator.Screen
           name="About"
           component={AboutNavigatorScreen}
@@ -563,7 +518,11 @@ class Main extends Component {
     return (
       <NavigationContainer>
         <MainNavigatorScreen login={this.props.login} />
-        {this.props.login.isLoggedIn ? (<ShoppingCart component={FavoritesNavigatorScreen} />) : <></>}
+        {this.props.login.isLoggedIn ? (
+          <ShoppingCart component={FavoritesNavigatorScreen} />
+        ) : (
+          <></>
+        )}
       </NavigationContainer>
     );
   }
