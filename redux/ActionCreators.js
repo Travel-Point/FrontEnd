@@ -187,7 +187,7 @@ export const setLogoutState = () => {
 };
 
 //register
-export const register = (name, password, email) => {
+export const register = (name, password, email, image) => {
   return () => {
     // don't forget to use dispatch here!
     return fetch(
@@ -203,6 +203,7 @@ export const register = (name, password, email) => {
           name: name,
           password: password,
           email: email,
+          image: image,
         }),
       },
     )

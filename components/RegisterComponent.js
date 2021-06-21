@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { ScrollView, View, Button, Image } from 'react-native';
+import { ScrollView, View, Button, StyleSheet, Text, Switch } from 'react-native';
 import { Input, CheckBox } from 'react-native-elements';
 import { connect } from 'react-redux'
 import { register } from '../redux/ActionCreators';
 
 const mapDispatchToProps = (dispatch) => ({
-    signup: (name, password, email) => dispatch(register(name, password, email)),
+    signup: (name, password, email, image) => dispatch(register(name, password, email, image)),
 });
 
 class Register extends Component {
@@ -15,11 +15,12 @@ class Register extends Component {
             name: '',
             password: '',
             email: '',
+            image: false,
             remember: false
         }
     }
-    handleRegister(name, password, email) {
-        this.props.signup(name, password, email);
+    handleRegister(name, password, email, image) {
+        this.props.signup(name, password, email, image);
     }
 
     render() {
@@ -42,16 +43,58 @@ class Register extends Component {
                         value={this.state.password}
                         secureTextEntry={true}
                         onChangeText={(password) => this.setState({ password: password.toLowerCase() })} />
+                    <View style={styles.formRow}>
+                        <Text style={styles.formLabel}>Male/Female?</Text>
+                        <Switch
+                            style={styles.formItem}
+                            value={this.state.image}
+                            onValueChange={(value) => this.setState({ image: value })}
+                        />
+                    </View>
                     <CheckBox containerStyle={{ backgroundColor: null }}
                         title='Remember Me' center
                         checked={this.state.remember}
                         onPress={() => this.setState({ remember: !this.state.remember })} />
                     <View style={{ marginTop: 20 }}>
-                        <Button title='REGISTER' color='#205AA7' onPress={() => this.handleRegister(this.state.name, this.state.password, this.state.email)} />
+                        <Button title='REGISTER' color='#205AA7' onPress={() => this.handleRegister(this.state.name, this.state.password, this.state.email, this.state.image)} />
                     </View>
                 </View>
             </ScrollView>
         );
     }
 }
+
 export default connect(null, mapDispatchToProps)(Register);
+
+const styles = StyleSheet.create({
+    formRow: {
+        alignItems: "center",
+        justifyContent: "center",
+        flex: 1,
+        flexDirection: "row",
+        margin: 20,
+    },
+    formLabel: {
+        fontSize: 18,
+        flex: 2,
+    },
+    formItem: {
+        flex: 1,
+    },
+    modal: {
+        justifyContent: "center",
+        margin: 20,
+    },
+    modalTitle: {
+        fontSize: 24,
+        fontWeight: "bold",
+        backgroundColor: "#000000",
+        textAlign: "center",
+        color: "white",
+        marginBottom: 20,
+    },
+    modalText: {
+        fontSize: 18,
+        margin: 10,
+    },
+});

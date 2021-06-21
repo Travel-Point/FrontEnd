@@ -26,6 +26,7 @@ import { connect } from "react-redux";
 const mapStateToProps = (state) => {
   return {
     dishes: state.dishes,
+    login: state.login,
   };
 };
 
@@ -216,7 +217,30 @@ class Menu extends Component {
                 </Text>
               </View>
             </View>
-            <Icon name="person-outline" size={38} color={COLORS.grey} />
+            {this.props.login.isLoggedIn ? (
+              <>
+                {this.props.login.user.image === false ? (
+                  <>
+                    <Image source={require("../assets/male.jpg")} style={{ width: 50, height: 50 }} />
+                    <Text style={{ fontSize: 10, fontWeight: "bold" }}>{this.props.login.userId}</Text>
+                  </>
+                ) : (
+                  <>
+                    <Image source={require("../assets/female.jpg")} style={{ width: 50, height: 50 }} />
+                    <Text style={{ fontSize: 10, fontWeight: "bold" }}>{this.props.login.userId}</Text>
+                  </>
+                )}
+              </>
+            ) : (
+              <Icon name="person-outline" size={38} color={COLORS.grey} />
+            )}
+            {/* {this.props.login.isLoggedIn ? (
+              <>
+                <Icon name="person-outline" size={38} color={COLORS.grey} />
+                <Text style={{ fontSize: 10, fontWeight: "bold" }}>{this.props.login.userId}</Text>
+              </>
+            ) : (<Icon name="person-outline" size={38} color={COLORS.grey} />)
+            } */}
           </View>
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={style.searchInputContainer}>
