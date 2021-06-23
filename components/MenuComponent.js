@@ -13,7 +13,7 @@ import {
   TouchableHighlight,
   Animated,
 } from "react-native";
-// import { ListItem, Avatar, Button } from "react-native-elements";
+import { Avatar, Card } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import COLORS from "../shared/colors";
 import Loading from "./LoadingComponent";
@@ -32,7 +32,7 @@ const mapStateToProps = (state) => {
 
 const style = StyleSheet.create({
   header: {
-    marginTop: 20,
+    marginTop: 15,
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 20,
@@ -53,7 +53,7 @@ const style = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginHorizontal: 20,
-    marginTop: 30,
+    marginTop: 50,
   },
 
   categoryListText: {
@@ -98,6 +98,17 @@ const style = StyleSheet.create({
     width: cardWidth,
     borderRadius: 15,
   },
+  container: {
+    borderWidth: 0, // Remove Border
+    // Remove Shadow for iOS
+    shadowColor: "rgba(0,0,0, 0.0)",
+    shadowOffset: { height: 0, width: 0 },
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    // Remove Shadow for Android
+    marginTop: -10,
+    elevation: 0,
+  },
 });
 
 const categories = ["All", "Popular", "Top Rated", "Featured", "Luxury"];
@@ -140,7 +151,7 @@ const CategoryList = () => {
   );
 };
 
-const Card = ({ item, index, navigate }) => {
+const Cards = ({ item, index, navigate }) => {
   return (
     <View style={{ ...style.card }}>
       <View style={style.priceTag}>
@@ -220,27 +231,37 @@ class Menu extends Component {
             {this.props.login.isLoggedIn ? (
               <>
                 {this.props.login.user.image === false ? (
-                  <>
-                    <Image source={require("../assets/male.jpg")} style={{ width: 50, height: 50 }} />
-                    <Text style={{ fontSize: 10, fontWeight: "bold" }}>{this.props.login.userId}</Text>
-                  </>
+                  <Card containerStyle1={style.container}>
+                    <Avatar
+                      source={require("../assets/male.jpg")}
+                      size="medium"
+                    />
+                    <Text style={{ fontSize: 10, fontWeight: "bold" }}>
+                      {this.props.login.userId}
+                    </Text>
+                  </Card>
                 ) : (
-                  <>
-                    <Image source={require("../assets/female.jpg")} style={{ width: 50, height: 50 }} />
-                    <Text style={{ fontSize: 10, fontWeight: "bold" }}>{this.props.login.userId}</Text>
-                  </>
+                  <Card containerStyle={style.container}>
+                    <Avatar
+                      size="medium"
+                      source={require("../assets/female.jpg")}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        fontWeight: "bold",
+                        paddingTop: 10,
+                        textAlign: "center",
+                      }}
+                    >
+                      {this.props.login.userId}
+                    </Text>
+                  </Card>
                 )}
               </>
             ) : (
               <Icon name="person-outline" size={38} color={COLORS.grey} />
             )}
-            {/* {this.props.login.isLoggedIn ? (
-              <>
-                <Icon name="person-outline" size={38} color={COLORS.grey} />
-                <Text style={{ fontSize: 10, fontWeight: "bold" }}>{this.props.login.userId}</Text>
-              </>
-            ) : (<Icon name="person-outline" size={38} color={COLORS.grey} />)
-            } */}
           </View>
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={style.searchInputContainer}>
@@ -260,7 +281,7 @@ class Menu extends Component {
                 contentContainerStyle={{ paddingVertical: 30, paddingLeft: 20 }}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item, index }) => (
-                  <Card item={item} index={index} navigate={navigate} />
+                  <Cards item={item} index={index} navigate={navigate} />
                 )}
               />
             </View>
