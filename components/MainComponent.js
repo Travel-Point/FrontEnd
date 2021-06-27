@@ -268,7 +268,7 @@ function MenuNavigatorScreen() {
       <MenuNavigator.Screen
         name="Dishdetail"
         component={Dishdetail}
-        options={{ headerTitle: "Dish Detail" }}
+        options={{ headerTitle: "Hotels Detail" }}
       />
     </MenuNavigator.Navigator>
   );
