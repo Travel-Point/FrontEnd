@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "TravelPoint",
-    "slug": "TravelPoint",
+    "slug": "Travel",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,7 +24,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "travelpoint.com"
+      "package": "thanhloc1308.Travel",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
